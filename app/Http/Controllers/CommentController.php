@@ -44,9 +44,29 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $product = Products::find($id);
+
+        if(!$product){
+            return response([
+                'message' => 'Product not found.'
+            ], 403);
+        }
+
+        $attrs = $request->validate([
+            'comment'          => 'required|string',
+        ]);
+
+        Comments::Create([
+            'product_id'    => $id,
+            'user_id'       => auth()->user()->id,
+            'comment'       => $attrs['comment']
+        ]);
+
+        return response([
+            'comment' => 'Comment created.',
+        ], 200);
     }
 
     /**
@@ -80,7 +100,33 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = Comments::find($id);
+
+        if(!$comment)
+        {
+            return response([
+                'message' => 'Comment not found'
+            ], 403);
+        }
+
+        if($comment->user_id != auth()->user()->id)
+        {
+            return response([
+                'message' => 'Permission denied.'
+            ], 403);
+        }
+
+        $attrs = $request->validate([
+            'comment' => 'required|string'
+        ]);
+
+        $comment->update([
+            'comment' => $attrs['comment']
+        ]);
+
+        return response([
+            'message' => 'Comment updated.'
+        ], 200);
     }
 
     /**
@@ -91,6 +137,26 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comment = Comments::find($id);
+
+        if(!$comment)
+        {
+            return response([
+                'message' => 'Comment not found'
+            ], 403);
+        }
+
+        if($comment->user_id != auth()->user()->id)
+        {
+            return response([
+                'message' => 'Permission denied.'
+            ], 403);
+        }
+
+        $comment->delete();
+
+        return response([
+            'message' => 'Comment deleted.'
+        ]);
     }
 }
