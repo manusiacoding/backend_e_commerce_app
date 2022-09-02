@@ -157,6 +157,6 @@ class CommentController extends Controller
 
         return response([
             'message' => 'Comment deleted.'
-        ]);
+        ], 200);
     }
 }
