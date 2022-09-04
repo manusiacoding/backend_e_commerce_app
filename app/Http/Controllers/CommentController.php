@@ -24,7 +24,7 @@ class CommentController extends Controller
         }
 
         return response([
-            'product' => $product->comments()->with('user:id, name, image')->get()
+            'product' => $product->comment()->with('user:id,name,image')->get()
         ], 200);
     }
 

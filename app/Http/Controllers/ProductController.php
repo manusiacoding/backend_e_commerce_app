@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         return response([
-            'product' => Product::orderBy('created_at', 'desc')->with('user:id, name, image')->withCount('comments', 'likes')->get()
+            'product' => Product::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')->get()
         ], 200);
     }
 
@@ -156,8 +156,8 @@ class ProductController extends Controller
             ], 403);
         }
 
-        $product->comments()->delete();
-        $product->likes()->delete();
+        $product->comment()->delete();
+        $product->like()->delete();
         $product->delete();
 
         return response([

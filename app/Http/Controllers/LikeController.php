@@ -24,7 +24,7 @@ class LikeController extends Controller
             ], 403);
         }
 
-        $like = $product->likes()->where('user_id', auth()->user()->id)->first();
+        $like = $product->like()->where('user_id', auth()->user()->id)->first();
 
         if(!$like)
         {
