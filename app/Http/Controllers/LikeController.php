@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Products;
+use App\Models\Likes;
 
 class LikeController extends Controller
 {
@@ -11,9 +13,36 @@ class LikeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function LikeOrUnlike($id)
     {
-        //
+        $product = Products::find($id);
+
+        if(!$product)
+        {
+            return response([
+                'message' => 'Product not found'
+            ], 403);
+        }
+
+        $like = $product->likes()->where('user_id', auth()->user()->id)->first();
+
+        if(!$like)
+        {
+            Likes::create([
+                'product_id' => $id,
+                'user_id' => auth()->user()->id
+            ]);
+
+            return response([
+                'message' => 'Liked.'
+            ], 200);
+        }
+
+        //dislike
+        $like->delete();
+        return response([
+            'message' => 'Disliked.'
+        ], 200);
     }
 
     /**

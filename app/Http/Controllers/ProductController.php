@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         return response([
-            'products' => Products::orderBy('created_at', 'desc')->with('user:id, name, image')->withCount('comments', 'likes')->get()
+            'product' => Products::orderBy('created_at', 'desc')->with('user:id, name, image')->withCount('comments', 'likes')->get()
         ], 200);
     }
 
@@ -48,6 +48,7 @@ class ProductController extends Controller
         ]);
 
         $product = Products::create([
+            'user_id'       => auth()->user()->id,
             'name'          => $attrs['name'],
             'price'         => $attrs['price'],
             'stock'         => $attrs['stock'],
