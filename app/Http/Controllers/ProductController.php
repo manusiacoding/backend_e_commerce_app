@@ -16,7 +16,11 @@ class ProductController extends Controller
     public function index()
     {
         return response([
-            'product' => Product::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')->get()
+            'product' => Product::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')
+            ->with('likes', function($like){
+                return $like->where('user_id', auth()->user()->id)->select('id', 'user_id', 'product_id')->get();
+            })
+            ->get()
         ], 200);
     }
 
@@ -43,9 +47,10 @@ class ProductController extends Controller
             'price'         => 'required|string',
             'stock'         => 'required|string',
             'description'   => 'required|string',
-            'type'          => 'required|string',
-            // 'image'          => 'required|string'
+            'type'          => 'required|string'
         ]);
+
+        $image = $this->saveImage($request->image, 'products');
 
         $product = Product::create([
             'user_id'       => auth()->user()->id,
@@ -54,7 +59,7 @@ class ProductController extends Controller
             'stock'         => $attrs['stock'],
             'description'   => $attrs['description'],
             'type'          => $attrs['type'],
-            // 'image'         => $attrs['image']
+            'image'         => $image
         ]);
 
         return response([
@@ -156,8 +161,8 @@ class ProductController extends Controller
             ], 403);
         }
 
-        $product->comment()->delete();
-        $product->like()->delete();
+        $product->comments()->delete();
+        $product->likes()->delete();
         $product->delete();
 
         return response([

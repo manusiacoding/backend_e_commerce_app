@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
@@ -64,5 +65,26 @@ class AuthController extends Controller
         return response([
             'user' => auth()->user()
         ], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $attrs = $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $image = $this->saveImage($request->image, 'profiles');
+
+        $user = User::find(auth()->user()->id);
+
+        $user->update([
+            'name' => $attrs['name'],
+            'image' => $image
+        ]);
+
+        return response([
+            'message' => 'user updated.',
+            'user' => auth()->user()
+        ]);
     }
 }
