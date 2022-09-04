@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Products;
-use App\Models\Comments;
+use App\Models\Product;
+use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index($id)
     {
-        $product = Products::find($id);
+        $product = Product::find($id);
 
         if(!$product){
             return response([
@@ -46,7 +46,7 @@ class CommentController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $product = Products::find($id);
+        $product = Product::find($id);
 
         if(!$product){
             return response([
@@ -58,7 +58,7 @@ class CommentController extends Controller
             'comment'          => 'required|string',
         ]);
 
-        Comments::Create([
+        Comment::Create([
             'product_id'    => $id,
             'user_id'       => auth()->user()->id,
             'comment'       => $attrs['comment']
@@ -100,7 +100,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $comment = Comments::find($id);
+        $comment = Comment::find($id);
 
         if(!$comment)
         {
@@ -137,7 +137,7 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        $comment = Comments::find($id);
+        $comment = Comment::find($id);
 
         if(!$comment)
         {

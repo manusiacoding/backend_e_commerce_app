@@ -6,20 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Comments extends Model
+class Comment extends Model
 {
     use HasFactory;
-
-    protected $fillable =
-    [
+    protected $fillable =[
         'user_id',
         'product_id',
         'comment'
     ];
 
-    //relation tables
-    public function user()
-    {
+    public function user(){
         return $this->belongsTo(User::class);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Products;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         return response([
-            'product' => Products::orderBy('created_at', 'desc')->with('user:id, name, image')->withCount('comments', 'likes')->get()
+            'product' => Product::orderBy('created_at', 'desc')->with('user:id, name, image')->withCount('comments', 'likes')->get()
         ], 200);
     }
 
@@ -47,7 +47,7 @@ class ProductController extends Controller
             // 'image'          => 'required|string'
         ]);
 
-        $product = Products::create([
+        $product = Product::create([
             'user_id'       => auth()->user()->id,
             'name'          => $attrs['name'],
             'price'         => $attrs['price'],
@@ -72,7 +72,7 @@ class ProductController extends Controller
     public function show($id)
     {
         return response([
-            'product' => Products::where('id', $id)->withCount('comments', 'likes')->get()
+            'product' => Product::where('id', $id)->withCount('comments', 'likes')->get()
         ], 200);
     }
 
@@ -96,7 +96,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Products::find($id);
+        $product = Product::find($id);
 
         if(!$product){
             return response([
@@ -142,7 +142,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Products::find($id);
+        $product = Product::find($id);
 
         if(!$product){
             return response([

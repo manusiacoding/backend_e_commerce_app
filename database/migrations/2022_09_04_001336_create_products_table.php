@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('stock');
             $table->longText('description');
             $table->text('type');
-            $table->string('image')->nullable();
+            $table->string('image');
             $table->timestamps();
         });
     }

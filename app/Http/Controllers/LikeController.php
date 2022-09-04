@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Products;
-use App\Models\Likes;
+use App\Models\Product;
+use App\Models\Like;
 
 class LikeController extends Controller
 {
@@ -15,7 +15,7 @@ class LikeController extends Controller
      */
     public function LikeOrUnlike($id)
     {
-        $product = Products::find($id);
+        $product = Product::find($id);
 
         if(!$product)
         {
@@ -28,7 +28,7 @@ class LikeController extends Controller
 
         if(!$like)
         {
-            Likes::create([
+            Like::create([
                 'product_id' => $id,
                 'user_id' => auth()->user()->id
             ]);
